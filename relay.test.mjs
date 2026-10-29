@@ -2,13 +2,13 @@ import {test} from 'node:test';
 import assert from 'node:assert/strict';
 import {relay,upstreamURL,UPSTREAM,rewritePublicURLs} from './relay.mjs';
 
-test('root resolves to the creator-linked build, assets and query stay in its folder',()=>{
-  assert.equal(upstreamURL('/','').href, UPSTREAM.href+'index.html');
+test('root resolves to the developer site, assets and query stay on its host',()=>{
+  assert.equal(upstreamURL('/','').href, UPSTREAM.href);
   assert.equal(upstreamURL('/assets/game.js','?v=3').href,UPSTREAM.href+'assets/game.js?v=3');
   assert.equal(upstreamURL(UPSTREAM.pathname+'assets/a.png','').href,UPSTREAM.href+'assets/a.png');
   assert.equal(upstreamURL('//evil.example/a','').origin,UPSTREAM.origin);
 });
-test('explicit public-build references become local paths',()=>{
+test('explicit developer-host references become local paths',()=>{
   assert.equal(rewritePublicURLs(UPSTREAM.href+'assets/a.js'),'/assets/a.js');
 });
 test('relay rewrites HTML without sending browser credentials',async()=>{
