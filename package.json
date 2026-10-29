@@ -1,0 +1,12 @@
+{
+  "name": "transportit-browser-relay",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "engines": {"node": ">=22"},
+  "scripts": {
+    "start": "node server.mjs",
+    "test": "node --test relay.test.mjs server.test.mjs",
+    "build": "node --check relay.mjs && node --check server.mjs"
+  }
+}
