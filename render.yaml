@@ -1,0 +1,13 @@
+services:
+  - type: web
+    name: transportit-browser-relay
+    runtime: node
+    plan: free
+    buildCommand: npm ci && npm run build && npm test
+    startCommand: npm start
+    healthCheckPath: /healthz
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: NODE_VERSION
+        value: "22"
