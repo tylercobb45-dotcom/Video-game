@@ -1,12 +1,12 @@
 # TransportIt browser relay
 
-A host-neutral Node.js relay for the free OneMoreRoute / TransportIt browser build linked by https://fabianxr.itch.io/transportit.
+A host-neutral Node.js relay for the free OneMoreRoute / TransportIt browser game on the developer's official site, https://transportit.fabianbuilds.com/.
 
-The game and its assets belong to FabianXR Builds. This package contains only relay code, tests and deployment configuration, not a copy of the game. It fixes the upstream to the creator-linked public build; it is not an open web proxy.
+The game and its assets belong to FabianXR Builds. This package contains only relay code, tests and deployment configuration, not a copy of the game. It fixes the upstream to the developer's public game site; it is not an open web proxy.
 
 ## Status
 
-Prepared for deployment. Not yet deployed to Render and not tested through the user's Lightspeed installation. No claim is made that it bypasses filtering, avoids categorization or remains accessible. A normal-looking homepage does not establish any of those properties.
+Deployed at https://transportit-browser-relay.onrender.com/. The developer-host relay is being tested, and it has not been tested through the user's Lightspeed installation. No claim is made that it bypasses filtering, avoids categorization or remains accessible. A normal-looking homepage does not establish any of those properties.
 
 ## Deploy on Render
 
@@ -31,8 +31,8 @@ The local server uses port 10000 unless PORT is set. `/` opens the game, `/_gate
 ## Boundaries and limitations
 
 - Only GET and HEAD are supported. No user cookies, authorization headers or request bodies are sent to the game host.
-- Redirects are restricted to the selected public-build folder. Verification and access denials are reported rather than bypassed.
+- Redirects are restricted to the developer's game site. Verification and access denials are reported rather than bypassed.
 - Browser saves are tied to the new origin. Use the game's save-file export for a backup.
 - External feedback, wiki or other services can still contact their own domains and may be unavailable.
-- The upstream build path is version-specific. If removed or changed, it needs maintenance.
+- The developer can change the game site's asset paths or access rules. Those changes might require maintenance.
 - Local tests use simulated upstream responses. Live server egress, game loading and device filtering need post-deployment verification.
