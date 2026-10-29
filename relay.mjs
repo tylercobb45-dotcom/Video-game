@@ -1,9 +1,9 @@
-// Fixed public browser build linked by the creator's itch.io page.
+// Fixed public browser game on the developer's own site.
 // Never forwards user credentials or accepts arbitrary upstream hosts.
-export const UPSTREAM = new URL('https://html-classic.itch.zone/html/19738715-2224150/');
+export const UPSTREAM = new URL('https://transportit.fabianbuilds.com/');
 export function upstreamURL(path, search) {
     const url = new URL(UPSTREAM);
-    url.pathname = path === '/' ? UPSTREAM.pathname + 'index.html' : path.startsWith(UPSTREAM.pathname) ? path : UPSTREAM.pathname + path.replace(/^\/+/, '');
+    url.pathname = path === '/' ? UPSTREAM.pathname : UPSTREAM.pathname + path.replace(/^\/+/, '');
     url.search = search;
     return url;
 }
@@ -36,7 +36,7 @@ export async function relay(request) {
                 break;
             const next = new URL(location, target);
             if (next.origin !== UPSTREAM.origin || !next.pathname.startsWith(UPSTREAM.pathname))
-                return screen('The source moved.', 'The game redirected outside its public browser-build folder. Open the creator’s page for the current version.', 502);
+                return screen('The source moved.', 'The game redirected outside the developer’s game site. Open the creator’s page for the current version.', 502);
             target = next;
         }
         if (!response || [301, 302, 303, 307, 308].includes(response.status))
