@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0c1626"><meta name="apple-mobile-web-app-capable" content="yes">
+<title>ASL 2B – Working Phone Player</title>
+<style>
+:root{color-scheme:dark;font-family:-apple-system,BlinkMacSystemFont,system-ui,"Segoe UI",sans-serif;background:#0c1626;color:#eef6ff}
+*{box-sizing:border-box}
+body{margin:0;background:#0c1626}
+main{max-width:850px;margin:0 auto;padding:8px 13px 60px}
+h1{font-size:24px;letter-spacing:-.5px;margin:14px 0 2px}
+h2{font-size:17px;margin:15px 0 8px}
+p{margin:6px 0 12px;line-height:1.48}
+small,.muted{color:#adc1d8}
+.subtitle{font-size:13px;color:#bdd2e9}
+.sticky{position:sticky;top:0;z-index:100;background:#0c1626;padding:7px 0 8px;border-bottom:1px solid #2b3c50;box-shadow:0 5px 13px #08101c70}
+.tabs{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:5px}
+.tab{font-size:12px;font-weight:700;color:#dbe8f6;background:#22344a;border:1px solid #4c6683;border-radius:10px;padding:12px 2px;min-height:50px;touch-action:manipulation}
+.tab.sel{background:#0e73ad;border-color:#89d8ff;color:white}
+.panel{border:1px solid #365271;background:#182c43;border-radius:13px;padding:12px;margin:12px 0}
+.panel h2{margin:0 0 7px}
+.coach{background:#1a334e}
+.coach-head{display:flex;gap:11px;align-items:center;margin:2px 0}
+.emoji{font-size:37px;line-height:1.35;min-width:48px;text-align:center}
+#stepTitle{font-size:21px;font-weight:800;line-height:1.2}
+#expression{font-size:13px;color:#b3e3ff;line-height:1.4}
+#storyInstruction{font-size:14px;line-height:1.55;margin-top:10px}
+#meaning{font-size:13px;color:#d0e5fc;margin-top:7px}
+#pauseCue{background:#725425;border:1px solid #b69256;color:#fff2c8;border-radius:10px;padding:11px;margin-top:10px;font-weight:700;display:none;text-align:center}
+.mini{display:flex;justify-content:space-between;color:#badcf2;font-size:13px;margin-top:11px;font-variant-numeric:tabular-nums}
+.progress{height:8px;background:#40536a;border-radius:15px;overflow:hidden;margin:7px 0 4px}
+.progress span{display:block;height:100%;width:0;background:#5dccff;transition:width .12s linear}
+.player{background:#020407;border-radius:13px;overflow:hidden;border:1px solid #45607c;margin:12px 0}
+video{display:block;aspect-ratio:4 / 3;width:100%;max-height:52vh;object-fit:contain;background:#020407}
+.videoFooter{display:flex;justify-content:space-between;align-items:center;background:#1a2e45;gap:6px;padding:10px 13px}
+#currentLabel{font-size:19px;font-weight:800}
+#position{font-size:13px;color:#d3e8fa}
+#status{font-size:14px;line-height:1.5;border-radius:11px;background:#192d43;border:1px solid #38536c;padding:11px 12px;margin:9px 0}
+#status.error{background:#45262a;color:#ffe1e2;border-color:#a45b62}
+#status.good{background:#19372f;color:#c0f6db}
+#videoState{font-size:13px;color:#c8dff7;padding:0 12px 12px}
+.controls{display:grid;grid-template-columns:1fr 1.45fr 1fr;gap:7px}
+.btn{background:#284560;border:1px solid #617f9e;border-radius:12px;color:#fff;font-size:15px;font-weight:750;min-height:54px;padding:10px 4px;touch-action:manipulation}
+.btn.primary{background:#167ec3;border-color:#70c5f9}
+.btn:active,.tab:active{filter:brightness(1.2)}
+.settings{display:flex;gap:13px;align-items:center;flex-wrap:wrap;margin-top:12px;font-size:14px}
+.settings label{display:flex;align-items:center;gap:7px}
+select{background:#273e58;color:white;border:1px solid #6582a0;border-radius:10px;padding:9px;font-size:14px;min-height:44px}
+.links{font-size:14px;margin:12px 0}
+.links a{color:#a5e0ff;text-decoration:underline}
+#sourceNote{font-size:12px;color:#bdcfe5;line-height:1.5}
+.steps{display:grid;gap:6px;max-height:250px;overflow:auto}
+.step{display:flex;align-items:center;justify-content:space-between;text-align:left;min-height:39px;border:1px solid #42607d;background:#192c42;color:#eaf4ff;border-radius:9px;padding:10px;font-size:14px}
+.step.sel{background:#11577d;border-color:#61bcec}
+.step span:last-child{font-size:11px;color:#b7cee5;margin-left:10px}
+.foot{font-size:12px;color:#b1c9df;line-height:1.55}
+@media(max-width:380px){.tab{font-size:11px}.btn{font-size:13px}main{padding-left:8px;padding-right:8px}}
+</style>
+<script defer src="/app.js"></script>
+</head>
+<body><main>
+<div class="sticky"><nav id="tabs" class="tabs" aria-label="Choose assignment"></nav></div>
+<h1>ASL 2B Video Coach</h1>
+<p class="subtitle">Four assignments · videos hosted with this page · slow playback · automatic progression.</p>
+<section class="panel coach" aria-label="Story acting instructions">
+ <div class="coach-head"><span id="emoji" class="emoji">👐</span><div><div id="stepTitle"></div><div id="expression"></div></div></div>
+ <div id="storyInstruction"></div><div id="meaning"></div><div id="pauseCue">⏸ Pause and hold the facial expression</div>
+ <div class="mini"><span id="elapsed"></span><span id="target"></span></div><div class="progress"><span id="progress"></span></div>
+</section>
+<section class="player">
+<video id="video" playsinline webkit-playsinline muted preload="auto" aria-label="ASL sign demonstration"></video>
+<div class="videoFooter"><strong id="currentLabel">Select assignment</strong><span id="position"></span></div>
+<div id="videoState">Ready to load a sign.</div>
+</section>
+<div class="controls"><button class="btn" id="previous" type="button">◀ Back</button><button class="btn primary" id="play" type="button">▶ Play all</button><button class="btn" id="next" type="button">Next ▶</button></div>
+<div class="settings"><label>Speed <select id="speed" aria-label="Video playback speed"><option value=".5">Very slow</option><option value=".75" selected>Slow 0.75×</option><option value="1">Normal</option><option value="1.25">Fast</option></select></label><label>Travel/lessons <select id="repeats" aria-label="Repetitions per vocabulary sign"><option value="1">1×</option><option value="2" selected>2×</option><option value="3">3×</option></select></label></div>
+<div id="status" role="status">Ready. Select one of the four assignment buttons above, then press Play all.</div>
+<div class="links"><a id="direct" href="#" target="_blank" rel="noopener">Open this video directly</a></div>
+<div id="sourceNote"></div>
+<h2 id="taskHeading">Signing order</h2><div id="steps" class="steps"></div>
+<p class="foot">The demonstrations show individual handshapes or vocabulary signs. For SCHOOLBUS and ABC, act out the story and show facial expressions throughout the full timed scene. Repeated reference videos help you practice; your own recording must communicate a coherent story and reach the assignment's two-minute minimum. Florida is shown as an F-L-A sequence. Eye contact and facial expression are taught through labeled component videos. If a file doesn't play, this player stops and gives you a direct link instead of skipping signs.</p>
+</main></body></html>
