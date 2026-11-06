@@ -1,0 +1,28 @@
+name: Verify all ASL vocabulary videos on phone and computer
+on:
+  push:
+    branches: [asl-phone-study]
+    paths:
+      - .github/scripts/verify-all-vocabulary.cjs
+      - .github/workflows/verify-all-vocabulary.yml
+  workflow_dispatch:
+jobs:
+  every-video:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Playwright and browsers
+        run: |
+          npm install --no-save playwright@1.56.1
+          npx playwright install --with-deps chromium webkit
+          npx playwright install chrome
+      - name: Play every video in assignments 3 and 4 on Chrome and WebKit
+        run: node .github/scripts/verify-all-vocabulary.cjs
+      - name: Save browser screenshots
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: asl-vocabulary-verification-screenshots
+          path: vocabulary-*.png
+          if-no-files-found: ignore
