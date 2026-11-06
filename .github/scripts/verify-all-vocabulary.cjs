@@ -96,13 +96,15 @@ for(const c of cases){
   await page.locator("#steps .step").nth(4).click();
   const names=[];
   for(let i=0;i<6;i++){
-   names.push(await page.locator("video").evaluate(v=>v.currentSrc.split("/").pop()));
+   names.push(await page.locator("video").evaluate(v=>v.src.split("/").pop()));
    await page.locator("video").evaluate(v=>v.dispatchEvent(new Event("ended")));
   }
   await page.waitForTimeout(850);
   const next=(await page.locator("#word").textContent()).trim();
-  if(next!=="TRAVEL")throw Error("next="+next);
-  return names[0]===names[3]&&names[1]===names[4]&&names[2]===names[5]&&new Set(names.slice(0,3)).size===3;
+  if(next!=="TRAVEL")throw Error("next="+next+", names="+JSON.stringify(names));
+  const correct=names[0]===names[3]&&names[1]===names[4]&&names[2]===names[5]&&new Set(names.slice(0,3)).size===3;
+  if(!correct)throw Error("Unexpected order: "+JSON.stringify(names));
+  return true;
  });
  await check("next/back and task switch still work",async()=>{
   await page.locator("#tabs .tab").nth(3).click();
