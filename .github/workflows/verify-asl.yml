@@ -1,0 +1,27 @@
+name: Verify ASL phone website in real browsers
+on:
+  push:
+    branches: [asl-phone-study]
+    paths:
+      - .github/workflows/verify-asl.yml
+      - .github/scripts/verify-asl.cjs
+  workflow_dispatch:
+jobs:
+  live-browser-check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Playwright browser engines
+        run: |
+          npm install --no-save playwright@1.56.1
+          npx playwright install --with-deps chromium webkit
+      - name: Test original phone site using Chromium and WebKit iPhone emulation
+        run: node .github/scripts/verify-asl.cjs
+      - name: Save screenshots
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: asl-phone-browser-screenshots
+          path: verify-*.png
+          if-no-files-found: ignore
