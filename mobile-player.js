@@ -77,6 +77,7 @@ function render(){
 }
 function prepareSource(source,autoStart){
  const token=state.stepToken;
+ if(state.loadTimeout!==null){clearTimeout(state.loadTimeout);state.loadTimeout=null}
  state.meta=false;state.failed=false;
  const url=source||"";
  v.pause();v.muted=true;v.playsInline=true;v.loop=isStory();
