@@ -17,7 +17,8 @@ jobs:
         run: |
           npm install --no-save playwright@1.56.1
           npx playwright install --with-deps chromium webkit
-      - name: Test original phone site using Chromium and WebKit iPhone emulation
+          npx playwright install chrome
+      - name: Test original ASL site using desktop Chrome and iPhone WebKit
         run: node .github/scripts/verify-asl.cjs
       - name: Save screenshots
         if: always()
