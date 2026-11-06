@@ -31,7 +31,7 @@ async function verify(browserName,kind){
  }
  await check("next button",async()=>{await page.locator("#next").click();return (await page.locator("#word").textContent()).trim()==="ME"});
  await check("back button",async()=>{await page.locator("#prev").click();return (await page.locator("#word").textContent()).trim()==="ONE"});
- await check("no JavaScript exceptions",()=>errors.length===0||("Browser exceptions "+JSON.stringify(errors)));
+ await check("no JavaScript exceptions",()=>{if(errors.length)throw Error("Browser exceptions "+JSON.stringify(errors));return true;});
  console.log("ERRORS_"+browserName+"="+JSON.stringify(errors));
  await page.screenshot({path:"verify-"+browserName+".png",fullPage:false});
  await browser.close();
