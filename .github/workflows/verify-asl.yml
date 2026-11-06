@@ -5,6 +5,7 @@ on:
     paths:
       - .github/workflows/verify-asl.yml
       - .github/scripts/verify-asl.cjs
+      - index.html
   workflow_dispatch:
 jobs:
   live-browser-check:
